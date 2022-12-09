@@ -4,6 +4,7 @@ using DataBaseManegmentSystem.Models;
 using DataBaseManegmentSystem.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 namespace DataBaseManegmentSystem.Controllers
 {
@@ -16,6 +17,13 @@ namespace DataBaseManegmentSystem.Controllers
         private readonly IMapper _mapper;
 
         private readonly IOrderService _orderService;
+
+        private readonly List<string> _extinsion = new List<string>
+        {
+            ".png",
+            ".jpj"
+        };
+        private readonly int _maxsize = 1048576;
 
         public ProductsController(IProductService product, IMapper mapper, IOrderService orderService)
         {
@@ -53,6 +61,14 @@ namespace DataBaseManegmentSystem.Controllers
             {
                 return BadRequest("The Order is not Valid");
             }
+            if (dto.ProductImage.Length > _maxsize)
+            {
+                return BadRequest("img size is not valid");
+            }
+            if(!_extinsion.Contains(Path.GetExtension(dto.ProductImage.FileName)))
+            {
+                return BadRequest("the extinsion is not img");
+            }
 
             using var img = new MemoryStream();
             await dto.ProductImage.CopyToAsync(img);
@@ -77,13 +93,6 @@ namespace DataBaseManegmentSystem.Controllers
             return Ok(product);
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> updateasync(int id,[FromForm] ProductDto dto)
-        //{
-        //    var product = await _orderService.GetOrderById(id);
-
-        //    product.Name = dto.Name;    
-        //    product.DateTime  = 
-        //}
+    
     }
 }

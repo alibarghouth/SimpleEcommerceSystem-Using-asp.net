@@ -17,6 +17,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 builder.Services.AddTransient<ICustomerService,CustomerService>();
 builder.Services.AddTransient<IProductService,ProductService>();
 builder.Services.AddTransient<IOrderService,OrderService>();
+builder.Services.AddTransient<IOrderItemService,OrderItemService>();
 
 
 
