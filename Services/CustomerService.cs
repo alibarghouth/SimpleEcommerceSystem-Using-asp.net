@@ -46,6 +46,19 @@ namespace DataBaseManegmentSystem.Services
             return await _Context.Customers.SingleOrDefaultAsync(cc => cc.LastName == name);
         }
 
+        public async Task<IEnumerable<Object>> searchProduct(string name)
+        {
+            var query = _Context.Customers
+                .Include(x => x.Products)
+                .Where(x => x.FirstName.Contains(name) || x.LastName.Contains(name))
+                .Select(x => new
+                {
+                    product= x.Products
+                });
+            
+            return await query.ToListAsync();
+        }
+
         public Customer UpdateCustomer(Customer customer)
         {
             _Context.Update(customer);

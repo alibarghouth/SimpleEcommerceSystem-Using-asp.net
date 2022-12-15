@@ -4,6 +4,9 @@ namespace DataBaseManegmentSystem.Services
 {
     public interface ICustomerService
     {
+        Task<IEnumerable<Object>> searchProduct(string name);
+
+
         Task<IEnumerable<Customer>> GetAllCustomer();
 
         Task<Customer> GetCustomerById(int id);

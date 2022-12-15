@@ -2,6 +2,7 @@
 using DataBaseManegmentSystem.Dto;
 using DataBaseManegmentSystem.Models;
 using DataBaseManegmentSystem.Services;
+using Grpc.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
@@ -25,10 +26,39 @@ namespace DataBaseManegmentSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCustomer()
         {
-            var customer =await _customerService.GetAllCustomer();
+            try
+            {
+                var customer = await _customerService.GetAllCustomer();
 
-            return Ok(customer);
+                return Ok(customer);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "");
+            }
+           
         }
+        [HttpGet("search")]
+        public async Task<IActionResult> search(string name)
+        {
+            try
+            {
+                var customer = await _customerService.searchProduct(name);
+                if (customer.Any())
+                {
+                    return Ok(customer);
+                }
+
+                return NotFound();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retriving from database");
+            }
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomerById(int id)
